@@ -8,5 +8,10 @@ export class Employee {
     company: string = '';
     jobExperience: number = 0;
     salary: number = 0;
-    profile: string = '';
+
+    profile?: any;
+    filename?: string;
+    filetype?: string;
+    filebytes?: any;
+    src?: any;
   }

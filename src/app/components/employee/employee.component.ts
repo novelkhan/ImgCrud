@@ -21,7 +21,9 @@ export class EmployeeComponent implements OnInit {
       company: '',
       jobExperience: 0,
       salary: 0,
-      profile: '',
+      filename: '',
+      filebytes: null as any,
+      src: null as any
     };
   }
 

@@ -46,12 +46,25 @@ export class AppComponent implements OnInit, AfterViewInit {
       salary: this.fb.control(''),
     });
 
+    // this.employeeService.getEmployees().subscribe((res) => {
+    //   for (let emp of res) {
+    //     this.employees.unshift(emp);
+    //   }
+    //   this.employeesToDisplay = this.employees;
+    // });
+
+
+
+
+    // New Code
     this.employeeService.getEmployees().subscribe((res) => {
       for (let emp of res) {
+        emp.src = ('data:image/jpeg;base64,' + emp.filebytes);
         this.employees.unshift(emp);
       }
       this.employeesToDisplay = this.employees;
     });
+
   }
 
   ngAfterViewInit(): void {
@@ -59,23 +72,41 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   addEmployee() {
-    let employee: Employee = {
-      firstname: this.FirstName.value,
-      lastname: this.LastName.value,
-      birthdate: this.BirthDay.value,
-      gender: this.Gender.value,
-      education: this.educationOptions[parseInt(this.Education.value)],
-      company: this.Company.value,
-      jobExperience: this.JobExperience.value,
-      salary: this.Salary.value,
-      profile: this.fileInput.nativeElement.files[0]?.name,
-    };
-    this.employeeService.postEmployee(employee).subscribe((res) => {
+    // let employee: Employee = {
+    //   firstname: this.FirstName.value,
+    //   lastname: this.LastName.value,
+    //   birthdate: this.BirthDay.value,
+    //   gender: this.Gender.value,
+    //   education: this.educationOptions[parseInt(this.Education.value)],
+    //   company: this.Company.value,
+    //   jobExperience: this.JobExperience.value,
+    //   salary: this.Salary.value,
+    //   profile: this.fileInput.nativeElement.files[0],
+    // };
+
+    const formData: FormData = new FormData();
+
+    formData.append('firstname', (this.FirstName.value) as string);
+    formData.append('lastname', (this.LastName.value) as string);
+    formData.append('birthdate', (this.BirthDay.value) as string);
+    formData.append('gender', (this.Gender.value) as string);
+    formData.append('education', (this.educationOptions[parseInt(this.Education.value)]) as string);
+    formData.append('company', (this.Company.value) as string);
+    formData.append('jobExperience', (this.JobExperience.value).toString());
+    formData.append('salary', (this.Salary.value).toString());
+    formData.append('profile', this.fileInput.nativeElement.files[0]);
+
+
+
+    this.employeeService.postEmployee(formData).subscribe((res) => {
       this.employees.unshift(res);
       this.clearForm();
     });
   }
 
+
+
+  
   removeEmployee(event: any) {
     this.employees.forEach((val, index) => {
       if (val.id === parseInt(event)) {
